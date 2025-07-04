@@ -1,66 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Registration Form</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="container mt-5">
-  <h2>Registration Form</h2>
+  <head>
+    <meta charset="UTF-8" />
+    <title>RVK Kadapa Guru Pooja Registration Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/jpg"
+      href="{{ url_for('static', filename='rvk-logo.jpg') }}"
+    />
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
 
-  <form method="POST" class="needs-validation" novalidate>
-    <div class="mb-3">
-      <label>Name:</label>
-      <input type="text" class="form-control" name="name" required>
-    </div>
-    <div class="mb-3">
-      <label>Phone Number:</label>
-      <input type="tel" class="form-control" name="phone" pattern="[0-9]{10}" required>
-    </div>
-    <div class="mb-3">
-      <label>Street:</label>
-      <input type="text" class="form-control" name="street" required>
-    </div>
-    <div class="mb-3">
-      <label>Village:</label>
-      <input type="text" class="form-control" name="village" required>
-    </div>
-    <div class="mb-3">
-      <label>District:</label>
-      <input type="text" class="form-control" name="district" required>
-    </div>
-    <div class="mb-3">
-      <label>Pincode:</label>
-      <input type="text" class="form-control" name="pincode" pattern="[0-9]{6}" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Register</button>
-  </form>
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
-  <script>
-    (() => {
-      'use strict';
-      const forms = document.querySelectorAll('.needs-validation');
-      Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-          if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-          form.classList.add('was-validated');
-        }, false);
+<style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background: radial-gradient(
+          circle,
+          rgba(245, 249, 255, 1) 50%,
+          rgba(234, 241, 251, 1) 100%
+        );
+        color: #1a1a1a;
+        padding-bottom: 80px;
+      }
+
+      .video-banner {
+        width: 100%;
+        height: auto;
+        max-height: auto;
+        object-fit: cover;
+        border-bottom: 4px solid #ffd500;
+      }
+
+      .event-header {
+        margin-top: 1rem;
+        text-align: center;
+      }
+
+      .event-title {
+        font-size: 2rem;
+        font-weight: 700;
+        background: radial-gradient(
+          circle,
+          rgba(255, 147, 15, 1) 0%,
+          rgba(253, 197, 0, 1) 52%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text; /* for Firefox */
+        color: transparent;
+        margin-bottom: 0.2rem;
+      }
+
+      .event-subtitle {
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: #003f88;
+        margin-bottom: 0.3rem;
+      }
+
+      .event-date-time {
+        font-size: 0.95rem;
+        color: #003f88;
+      }
+
+      .event-divider {
+        width: 80px;
+        height: 3px;
+        background: #FDC500;
+        border: none;
+        opacity: 1;
+        margin: 0.5rem auto 1rem auto;
+        border-radius: 4px;
+      }
+
+      .event-info {
+        padding: 1rem;
+        background: #ffffff;
+        color: #00296b;
+        border-left: 4px solid #ffd500;
+        margin-bottom: 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.95rem;
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+      }
+
+      form label {
+        font-weight: 500;
+        color: #00296b;
+      }
+
+      input.form-control {
+        background-color: #ffffff;
+        border: 1px solid #ccc;
+        color: #1a1a1a;
+      }
+
+      .btn-primary {
+        background-color: #fdc500;
+        border: none;
+        color: #00296b;
+      }
+
+      .btn-primary:hover {
+        background-color: #ffd500;
+        color: #00296b;
+      }
+
+      .btn-secondary {
+        background-color: #003f88;
+        border: none;
+        color: #ffffff;
+      }
+
+      .btn-secondary:hover {
+        background-color: #00509d;
+      }
+
+      .confirmation-box {
+        background: #e8f5e9;
+        border: 1px solid #28a745;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        color: #1a1a1a;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+        margin-top: 1rem;
+      }
+
+      footer {
+        color: #00296b;
+        text-align: center;
+        font-size: 0.85rem;
+        padding: 10px 8px;
+        border-top: 2px solid #d0d7e0; /* soft, minimal line */
+        box-shadow: none;
+        border-radius: 0;
+      }
+
+      footer strong {
+        color: #003f88;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .container {
+        flex: 1;
+      }
+
+      @media (max-width: 576px) {
+        .event-title {
+          font-size: 1.6rem;
+        }
+
+        .event-subtitle {
+          font-size: 1.1rem;
+        }
+
+        .event-date-time {
+          font-size: 0.85rem;
+        }
+
+        .container {
+          padding: 0 1rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="container mt-3">
+    <!-- Video Banner -->
+    <video  id="bannerVideo" class="video-banner mb-3" autoplay muted playsinline>
+      <source
+        src="{{ url_for('static', filename='banner.mp4') }}"
+        type="video/mp4"
+      />
+      Your browser does not support the video tag.
+    </video>
+
+    <!-- Event Header -->
+    <div class="event-header">
+      <h1 class="event-title">Prem Aabhar</h1>
+      <h2 class="event-subtitle">59th Guru Pooja Mahotsav</h2>
+      <p class="event-date-time">
+        Thursday, 31st July 2025 • 10:30 AM – 2:00 PM
+      </p>
+      <hr class="event-divider" />
+    </div>
+
+    <h2 class="mb-3">Register for Guru Pooja</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <div
+      class="alert alert-{{ category }} alert-dismissible fade show"
+      role="alert"
+    >
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+
+    <form method="POST" class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label>Name:</label>
+        <input type="text" class="form-control" name="name" required />
+      </div>
+      <div class="mb-3">
+        <label>Phone Number:</label>
+        <input
+          type="tel"
+          class="form-control"
+          name="phone"
+          pattern="[0-9]{10}"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label>Street:</label>
+        <input type="text" class="form-control" name="street" required />
+      </div>
+      <div class="mb-3">
+        <label>Village:</label>
+        <input type="text" class="form-control" name="village" required />
+      </div>
+      <div class="mb-3">
+        <label>District:</label>
+        <input type="text" class="form-control" name="district" required />
+      </div>
+      <div class="mb-3">
+        <label>Pincode:</label>
+        <input
+          type="text"
+          class="form-control"
+          name="pincode"
+          pattern="[0-9]{6}"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Register</button>
+    </form>
+
+    <footer class="mt-5">
+      <p>
+        <strong>Prem Aabhar - 59th Guru Pooja Mahotsav</strong><br />
+        31st July 2025 | 10:30 AM – 2:00 PM<br />
+        Raj Vidya Kender, Alamkhan Palli, Kadapa - 516003<br />
+        Contact: 9440570704
+      </p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const video = document.getElementById("bannerVideo");
+
+        video.addEventListener("ended", function () {
+          // Ensure video doesn't auto-loop
+          setTimeout(() => {
+            video.currentTime = 0;
+
+            // Re-attempt to play, handle promise for browsers like Chrome
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+              playPromise.catch((error) => {
+                console.error("Video play failed after delay:", error);
+              });
+            }
+          }, 4000); // 5 second pause
+        });
       });
-    })();
-  </script>
-</body>
+
+      (() => {
+        "use strict";
+        const forms = document.querySelectorAll(".needs-validation");
+        Array.from(forms).forEach((form) => {
+          form.addEventListener(
+            "submit",
+            (event) => {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      })();
+    </script>
+  </body>
 </html>
