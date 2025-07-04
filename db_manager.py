@@ -1,10 +1,15 @@
+import sys
 import mysql.connector
 from mysql.connector import pooling, Error
 import logging
 
-# Optional: File-based logging for DB errors
-logging.basicConfig(filename='db_errors.log', level=logging.ERROR,
-                    format='%(asctime)s [%(levelname)s] %(message)s')
+logger = logging.getLogger("DBManager")
+
+logging.basicConfig(
+    stream=sys.stdout,
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 
 class DBManager:
@@ -16,22 +21,22 @@ class DBManager:
         :param pool_size: Number of connections to keep in pool
         """
         try:
+            logger.debug(f"Creating MySQL connection pool: name={pool_name}, size={pool_size}, config={config}")
             self.pool = pooling.MySQLConnectionPool(
                 pool_name=pool_name,
                 pool_size=pool_size,
                 pool_reset_session=True,
                 **config
             )
+            logger.info("MySQL connection pool created successfully.")
         except Error as e:
-            logging.error(f"Error creating connection pool: {e}")
+            logger.error(f"Error creating connection pool: {e}")
             raise
 
     def get_connection(self):
-        """
-        Get a connection from the pool.
-        """
         try:
+            logger.debug("Getting connection from pool...")
             return self.pool.get_connection()
         except Error as e:
-            logging.error(f"Error getting connection from pool: {e}")
+            logger.error(f"Error getting connection from pool: {e}")
             raise
