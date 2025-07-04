@@ -1,0 +1,62 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environment
+venv/
+.venv/
+ENV/
+env/
+*.env
+
+# Environment variable files
+.env
+.env.*
+
+# VSCode and IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs and DB dumps
+*.log
+*.sql
+*.sqlite3
+
+# PyInstaller
+dist/
+build/
+*.spec
+
+# Test and coverage
+.coverage
+coverage.xml
+htmlcov/
+
+# Flask cache or sessions
+instance/
+*.db
+*.bak
+
+# OS/system files
+.DS_Store
+Thumbs.db
+
+# __pycache__ everywhere
+**/__pycache__/
+
+# Pipenv
+Pipfile.lock
+
+# Pytest cache
+.pytest_cache/
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# MySQL credentials (if written locally)
+db_errors.log
