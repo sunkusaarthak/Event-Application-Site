@@ -7,7 +7,7 @@
     <link
       rel="icon"
       type="image/jpg"
-      href="{{ url_for('static', filename='rvk-logo.jpg') }}"
+      href="{{ url_for('static', filename='rvk-logo.png') }}"
     />
 
     <!-- Google Font -->
@@ -22,7 +22,10 @@
       rel="stylesheet"
     />
 
-<style>
+    <!-- Before </body> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
       body {
         font-family: "Poppins", sans-serif;
         background: radial-gradient(
@@ -39,7 +42,8 @@
         height: auto;
         max-height: auto;
         object-fit: cover;
-        border-bottom: 4px solid #ffd500;
+        border-radius: 20px;
+        border-bottom: 3px solid rgba(200, 220, 255, 1);
       }
 
       .event-header {
@@ -77,7 +81,7 @@
       .event-divider {
         width: 80px;
         height: 3px;
-        background: #FDC500;
+        background: #fdc500;
         border: none;
         opacity: 1;
         margin: 0.5rem auto 1rem auto;
@@ -188,7 +192,13 @@
 
   <body class="container mt-3">
     <!-- Video Banner -->
-    <video  id="bannerVideo" class="video-banner mb-3" autoplay muted playsinline>
+    <video
+      id="bannerVideo"
+      class="video-banner mb-3"
+      autoplay
+      muted
+      playsinline
+    >
       <source
         src="{{ url_for('static', filename='banner.mp4') }}"
         type="video/mp4"
@@ -269,25 +279,18 @@
     </footer>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const video = document.getElementById("bannerVideo");
-
-        video.addEventListener("ended", function () {
-          // Ensure video doesn't auto-loop
-          setTimeout(() => {
-            video.currentTime = 0;
-
-            // Re-attempt to play, handle promise for browsers like Chrome
-            const playPromise = video.play();
-            if (playPromise !== undefined) {
-              playPromise.catch((error) => {
-                console.error("Video play failed after delay:", error);
-              });
-            }
-          }, 4000); // 5 second pause
-        });
+      const video = document.getElementById("bannerVideo");
+      video.playbackRate = 0.5;
+      video.addEventListener("click", () => {
+        video.currentTime = 0;
+        video.play();
       });
 
+      // Optional: also handle touch for mobile (not always needed but extra safe)
+      video.addEventListener("touchstart", () => {
+        video.currentTime = 0;
+        video.play();
+      });
       (() => {
         "use strict";
         const forms = document.querySelectorAll(".needs-validation");

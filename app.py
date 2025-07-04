@@ -1,7 +1,7 @@
 import sys
 import logging
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from db_manager import DBManager
 from dotenv import load_dotenv
 
@@ -83,7 +83,8 @@ def register():
 
             if row:
                 logger.info(f"User ID fetched: {row[0]} for phone: {phone}")
-                return redirect(url_for('confirmation', user_id=row[0]))
+                session['recent_user_id'] = row[0]
+                return redirect(url_for('confirmation'))
             else:
                 logger.warning("Registration inserted but ID not fetched")
                 flash("Registered, but could not fetch your ID.", "warning")
@@ -97,9 +98,17 @@ def register():
     logger.debug("Rendering registration form")
     return render_template('form.html')
 
-@app.route('/confirmation/<int:user_id>')
-def confirmation(user_id):
+@app.route('/confirmation')
+def confirmation():
+    user_id = session.get('recent_user_id')
     logger.info(f"Confirmation page accessed for user_id: {user_id} from {request.remote_addr}")
+    if session.get('recent_user_id') is None:
+        logger.warning(f"Unauthorized confirmation access attempt for user_id: {user_id}")
+        flash("Unauthorized access to confirmation page!", "danger")
+        return redirect(url_for('register'))
+
+    # Allow access and clear session
+    session.pop('recent_user_id', None)
     return render_template('confirmation.html', user_id=user_id)
 
 @app.route('/test-db')
