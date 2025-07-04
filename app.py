@@ -1,16 +1,20 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from db_manager import DBManager
+from dotenv import load_dotenv
+
+# Load .env locally for development
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = ''
+app.secret_key = os.getenv('SECRT_KEY')
 
-# MySQL config
 db_config = {
-    'host': 'mysql',
-    'port': '',  # Replace with your actual port
-    'user': '',
-    'password': '',
-    'database': '',
+    'host': os.getenv('MYSQL_HOST'),
+    'port': int(os.getenv('MYSQL_PORT', 3306)),
+    'user': os.getenv('MYSQL_USER'),
+    'password': os.getenv('MYSQL_PASSWORD'),
+    'database': os.getenv('MYSQL_DB'),
     'ssl_disabled': False
 }
 
