@@ -18,6 +18,7 @@ logger = logging.getLogger("EventApp")
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRT_KEY')
+pool_size = int(os.getenv('POOL_SIZE'))
 
 db_config = {
     'host': os.getenv('MYSQL_HOST'),
@@ -29,7 +30,7 @@ db_config = {
 }
 
 # Init DBManager with pooling
-db = DBManager(db_config, pool_size=5)
+db = DBManager(db_config, pool_size=pool_size)
 
 @app.route('/heartbeat')
 def heartbeat():
@@ -37,7 +38,8 @@ def heartbeat():
 
 @app.route('/', methods=['GET', 'POST'])
 def register():
-    logger.debug(f"Handling {request.method} request at / from {request.remote_addr}")
+    lang = request.args.get('lang', 'en')
+    logger.debug(f"Handling {request.method} request at / from {request.remote_addr} with lang={lang}")
     if request.method == 'POST':
         name = request.form['name']
         phone = request.form['phone']
@@ -89,34 +91,35 @@ def register():
                     session['old'] = True
                 else:
                     session['old'] = False
-                return redirect(url_for('confirmation'))
+                return redirect(url_for('confirmation', lang=lang))
             else:
                 logger.warning("Registration inserted but ID not fetched")
                 flash("Registered, but could not fetch your ID.", "warning")
-                return redirect(url_for('register'))
+                return redirect(url_for('register', lang=lang))
 
         except Exception as e:
             logger.exception(f"Database error during registration for phone: {phone}")
             flash(f"Database error: {str(e)}", "danger")
-            return redirect(url_for('register'))
+            return redirect(url_for('register', lang=lang))
 
     logger.debug("Rendering registration form")
-    return render_template('form.html')
+    return render_template('form.html', lang=lang)
 
 @app.route('/confirmation')
 def confirmation():
+    lang = request.args.get('lang', 'en')
     user_id = session.get('recent_user_id')
     old_registration = session.get('old')
     logger.info(f"Confirmation page accessed for user_id: {user_id} from {request.remote_addr}")
     if session.get('recent_user_id') is None:
         logger.warning(f"Unauthorized confirmation access attempt for user_id: {user_id}")
         flash("Unauthorized access to confirmation page!", "danger")
-        return redirect(url_for('register'))
+        return redirect(url_for('register', lang=lang))
 
     # Allow access and clear session
     session.pop('recent_user_id', None)
     session.pop('old', None)
-    return render_template('confirmation.html', user_id=user_id, old_registration=old_registration)
+    return render_template('confirmation.html', user_id=user_id, old_registration=old_registration, lang=lang)
 
 @app.route('/test-db')
 def test_db():
@@ -137,6 +140,7 @@ def test_db():
 
 @app.route('/admin/fetch/details')
 def fetch_details():
+    lang = request.args.get('lang', 'en')
     try:
         conn = db.get_connection()
         logger.debug("Obtained DB connection from pool for fetch_details")
@@ -146,25 +150,31 @@ def fetch_details():
         logger.debug("Executed Fetch all Query")
         rows = cursor.fetchall()
 
+        for a in rows:
+            a['id'] = "RVKKDP" + str(a['id'])
+
         cursor.close()
         conn.close()
         logger.debug("Closed DB cursor and connection after fetch")
 
-        return render_template('admin.html', registrations=rows)
+        return render_template('admin.html', registrations=rows, lang=lang)
 
     except Exception as e:
         logger.exception("Database error during admin fetch")
         flash(f"Database error: {str(e)}", "danger")
-        return redirect(url_for('register'))
+        return redirect(url_for('register', lang=lang))
 
 @app.route('/admin/export/csv')
 def export_csv():
     try:
         conn = db.get_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM registrations ORDER BY id ASC")
         rows = cursor.fetchall()
 
+        for a in rows:
+            a['id'] = "RVKKDP" + str(a['id'])
+        
         cursor.close()
         conn.close()
 
@@ -176,7 +186,16 @@ def export_csv():
         si = StringIO()
         writer = csv.writer(si)
         writer.writerow(["ID", "Name", "Phone", "Village", "district", "pincode"])  # CSV headers
-        writer.writerows(rows)
+        # Write row data
+        for row in rows:
+            writer.writerow([
+                row['id'],
+                row['name'],
+                row['phone_number'],
+                row['village'],
+                row['district'],
+                row['pincode']
+            ])
 
         output = si.getvalue()
         si.close()

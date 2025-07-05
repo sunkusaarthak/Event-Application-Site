@@ -218,16 +218,35 @@
   </head>
 
   <body class="container mt-3">
+    <!-- Language Toggle -->
+    <div class="d-flex justify-content-end mb-2">
+      <a href="{{ url_for('confirmation', lang='en') }}" class="btn btn-sm {% if lang == 'en' %}btn-primary{% else %}btn-secondary{% endif %} me-1">English</a>
+      <a href="{{ url_for('confirmation', lang='te') }}" class="btn btn-sm {% if lang == 'te' %}btn-primary{% else %}btn-secondary{% endif %}">తెలుగు</a>
+    </div>
     <!-- Event Header -->
     <div class="event-header">
       <h1 class="event-title">
-        <a href="/" style="text-decoration: none; color: inherit"
-          >Prem Aabhar</a
-        >
+        <a href="{{ url_for('register', lang=lang) }}" style="text-decoration: none; color: inherit">
+          {% if lang == 'te' %}
+            ప్రేమ్ ఆభార్
+          {% else %}
+            Prem Aabhar
+          {% endif %}
+        </a>
       </h1>
-      <h2 class="event-subtitle">59th Guru Pooja Mahotsav</h2>
+      <h2 class="event-subtitle">
+        {% if lang == 'te' %}
+          59వ గురుపూజ మహోత్సవం
+        {% else %}
+          59th Guru Pooja Mahotsav
+        {% endif %}
+      </h2>
       <p class="event-date-time">
-        Thursday, 31st July 2025 • 10:30 AM – 2:00 PM
+        {% if lang == 'te' %}
+          గురువారం, 31 జూలై 2025 • ఉదయం 10:30 – మధ్యాహ్నం 2:00
+        {% else %}
+          Thursday, 31st July 2025 • 10:30 AM – 2:00 PM
+        {% endif %}
       </p>
       <hr class="event-divider" />
     </div>
@@ -235,12 +254,28 @@
     <!-- Confirmation Message -->
     <div class="confirmation-box">
       {% if old_registration %}
-        <h4>⚠️ Already Registered</h4>
+        <h4>
+          {% if lang == 'te' %}
+            ⚠️ ఇప్పటికే నమోదు చేశారు
+          {% else %}
+            ⚠️ Already Registered
+          {% endif %}
+        </h4>
       {% else %}
-        <h4>🎉 Registration Successful!</h4>
+        <h4>
+          {% if lang == 'te' %}
+            🎉 నమోదు విజయవంతం!
+          {% else %}
+            🎉 Registration Successful!
+          {% endif %}
+        </h4>
       {% endif %}
       <p>
-        Your registration ID is:
+        {% if lang == 'te' %}
+          మీ నమోదు ఐడి:
+        {% else %}
+          Your registration ID is:
+        {% endif %}
         <span id="copy-wrapper" class="copy-wrapper">
           <strong id="reg-id">RVKKDP{{ user_id }}</strong>
           <!-- Modern copy SVG icon -->
@@ -255,14 +290,32 @@
       </p>
     </div>
 
-    <a href="/" class="btn btn-secondary mt-3">Register Another</a>
+    <a href="{{ url_for('register', lang=lang) }}" class="btn btn-secondary mt-3">
+      {% if lang == 'te' %}
+        మరో నమోదు
+      {% else %}
+        Register Another
+      {% endif %}
+    </a>
     <!-- Footer -->
     <footer class="mt-5">
       <p>
-        <strong>Prem Aabhar - 59th Guru Pooja Mahotsav</strong><br />
-        31st July 2025 | 10:30 AM – 2:00 PM<br />
-        Raj Vidya Kender, Alamkhan Palli, Kadapa - 516003<br />
-        Contact: 9440570704
+        <strong>
+          {% if lang == 'te' %}
+            ప్రేమ్ ఆభార్ - 59వ గురుపూజ మహోత్సవం
+          {% else %}
+            Prem Aabhar - 59th Guru Pooja Mahotsav
+          {% endif %}
+        </strong><br />
+        {% if lang == 'te' %}
+          31 జూలై 2025 | ఉదయం 10:30 – మధ్యాహ్నం 2:00<br />
+          రాజ్ విద్యా కేంద్ర్, ఆలంకాన్ పల్లి, కడప - 516003<br />
+          సంప్రదించండి: 9440570704
+        {% else %}
+          31st July 2025 | 10:30 AM – 2:00 PM<br />
+          Raj Vidya Kender, Alamkhan Palli, Kadapa - 516003<br />
+          Contact: 9440570704
+        {% endif %}
       </p>
     </footer>
     <script>
