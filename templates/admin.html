@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin - Registered Users</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/jpg"
+      href="{{ url_for('static', filename='rvk-logo.png') }}"
+    />
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    
+    <style>
+      .table {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+        backdrop-filter: blur(4px);
+        border-collapse: collapse;
+      }
+
+      .table thead {
+        background: linear-gradient(to right, #00296b, #ffd500);
+        color: white;
+        font-weight: 600;
+      }
+
+      .table th,
+      .table td {
+        vertical-align: middle;
+        font-size: 0.95rem;
+        color: #00296b;
+        border-color: #e3eaf5;
+        padding: 12px 16px;
+      }
+
+      .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: #fefbe5;
+        /* pale gold */
+      }
+
+      .table-hover tbody tr:hover {
+        background-color: #fff8cc;
+        /* light hover with gold hue */
+      }
+
+      h2 {
+        font-weight: 600;
+        color: #00296b;
+        margin-bottom: 0.75rem;
+      }
+
+      .text-muted {
+        color: #4a5e89 !important;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: radial-gradient(
+          circle,
+          rgba(245, 249, 255, 1) 50%,
+          rgba(234, 241, 251, 1) 100%
+        );
+        color: #1a1a1a;
+        padding-bottom: 80px;
+      }
+
+      .event-header {
+        margin-top: 1rem;
+        text-align: center;
+      }
+
+      .event-title {
+        font-size: 2rem;
+        font-weight: 700;
+        background: radial-gradient(
+          circle,
+          rgba(255, 147, 15, 1) 0%,
+          rgba(253, 197, 0, 1) 52%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        /* for Firefox */
+        color: transparent;
+        margin-bottom: 0.2rem;
+      }
+
+      .event-subtitle {
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: #003f88;
+        margin-bottom: 0.3rem;
+      }
+
+      .event-date-time {
+        font-size: 0.95rem;
+        color: #003f88;
+      }
+
+      .event-divider {
+        width: 80px;
+        height: 3px;
+        background: #fdc500;
+        border: none;
+        opacity: 1;
+        margin: 0.5rem auto 1rem auto;
+        border-radius: 4px;
+      }
+
+      .event-info {
+        padding: 1rem;
+        background: #ffffff;
+        color: #00296b;
+        border-left: 4px solid #ffd500;
+        margin-bottom: 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.95rem;
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+      }
+
+      .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      footer {
+        color: #00296b;
+        text-align: center;
+        font-size: 0.85rem;
+        padding: 10px 8px;
+        border-top: 2px solid #d0d7e0; /* soft, minimal line */
+        box-shadow: none;
+        border-radius: 0;
+      }
+
+      footer strong {
+        color: #003f88;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .container {
+        flex: 1;
+      }
+
+      .btn-outline-primary {
+        border-color: #003f88;
+        color: #003f88;
+        font-weight: 500;
+      }
+
+      .btn-outline-primary:hover {
+        background-color: #003f88;
+        color: #fff;
+      }
+
+      @media (max-width: 576px) {
+        .event-title {
+          font-size: 1.6rem;
+        }
+
+        .event-subtitle {
+          font-size: 1.1rem;
+        }
+
+        .event-date-time {
+          font-size: 0.85rem;
+        }
+
+        .container {
+          padding: 0 1rem;
+        }
+
+        .table th,
+        .table td {
+          white-space: nowrap;
+          font-size: 0.85rem;
+          padding: 10px 12px;
+        }
+
+        h2 {
+          font-size: 1.25rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="container mt-3">
+    <!-- Event Header -->
+    <div class="event-header">
+      <h1 class="event-title">
+        <a href="/" style="text-decoration: none; color: inherit"
+          >Prem Aabhar</a
+        >
+      </h1>
+      <h2 class="event-subtitle">59th Guru Pooja Mahotsav</h2>
+      <p class="event-date-time">
+        Thursday, 31st July 2025 • 10:30 AM – 2:00 PM
+      </p>
+      <hr class="event-divider" />
+    </div>
+
+    <div class="container">
+      <div
+        class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2"
+      >
+        <h2>👤 Registered Participants</h2>
+        <a
+          href="{{ url_for('export_csv') }}"
+          class="btn btn-sm btn-outline-primary"
+        >
+          ⬇️ Export CSV
+        </a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Village</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in registrations %}
+            <tr>
+              <td>{{ row.id }}</td>
+              <td>{{ row.name }}</td>
+              <td>{{ row.phone_number }}</td>
+              <td>{{ row.village }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="4" class="text-center">No registrations found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Footer -->
+    <footer class="mt-5">
+      <p>
+        <strong>Prem Aabhar - 59th Guru Pooja Mahotsav</strong><br />
+        31st July 2025 | 10:30 AM – 2:00 PM<br />
+        Raj Vidya Kender, Alamkhan Palli, Kadapa - 516003<br />
+        Contact: 9440570704
+      </p>
+    </footer>
+  </body>
+</html>

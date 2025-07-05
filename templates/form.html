@@ -191,6 +191,12 @@
   </head>
 
   <body class="container mt-3">
+    <!-- Language Toggle -->
+    <div class="d-flex justify-content-end mb-2">
+      <a href="{{ url_for('register', lang='en') }}" class="btn btn-sm {% if lang == 'en' %}btn-primary{% else %}btn-secondary{% endif %} me-1">English</a>
+      <a href="{{ url_for('register', lang='te') }}" class="btn btn-sm {% if lang == 'te' %}btn-primary{% else %}btn-secondary{% endif %}">తెలుగు</a>
+    </div>
+
     <!-- Video Banner -->
     <video
       id="bannerVideo"
@@ -208,15 +214,37 @@
 
     <!-- Event Header -->
     <div class="event-header">
-      <h1 class="event-title">Prem Aabhar</h1>
-      <h2 class="event-subtitle">59th Guru Pooja Mahotsav</h2>
+      <h1 class="event-title">
+        {% if lang == 'te' %}
+          ప్రేమ్ ఆభార్
+        {% else %}
+          Prem Aabhar
+        {% endif %}
+      </h1>
+      <h2 class="event-subtitle">
+        {% if lang == 'te' %}
+          59వ గురుపూజ మహోత్సవం
+        {% else %}
+          59th Guru Pooja Mahotsav
+        {% endif %}
+      </h2>
       <p class="event-date-time">
-        Thursday, 31st July 2025 • 10:30 AM – 2:00 PM
+        {% if lang == 'te' %}
+          గురువారం, 31 జూలై 2025 • ఉదయం 10:30 – మధ్యాహ్నం 2:00
+        {% else %}
+          Thursday, 31st July 2025 • 10:30 AM – 2:00 PM
+        {% endif %}
       </p>
       <hr class="event-divider" />
     </div>
 
-    <h2 class="mb-3">Register for Guru Pooja</h2>
+    <h2 class="mb-3">
+      {% if lang == 'te' %}
+        గురుపూజ కోసం నమోదు చేయండి
+      {% else %}
+        Register for Guru Pooja
+      {% endif %}
+    </h2>
 
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% for category, message in messages %}
@@ -231,11 +259,15 @@
 
     <form method="POST" class="needs-validation" novalidate>
       <div class="mb-3">
-        <label>Name:</label>
+        <label>
+          {% if lang == 'te' %}పేరు{% else %}Name:{% endif %}
+        </label>
         <input type="text" class="form-control" name="name" required />
       </div>
       <div class="mb-3">
-        <label>Phone Number:</label>
+        <label>
+          {% if lang == 'te' %}ఫోన్ నంబర్{% else %}Phone Number:{% endif %}
+        </label>
         <input
           type="tel"
           class="form-control"
@@ -245,19 +277,27 @@
         />
       </div>
       <div class="mb-3">
-        <label>Street:</label>
+        <label>
+          {% if lang == 'te' %}వీధి{% else %}Street:{% endif %}
+        </label>
         <input type="text" class="form-control" name="street" required />
       </div>
       <div class="mb-3">
-        <label>Village:</label>
+        <label>
+          {% if lang == 'te' %}గ్రామం{% else %}Village:{% endif %}
+        </label>
         <input type="text" class="form-control" name="village" required />
       </div>
       <div class="mb-3">
-        <label>District:</label>
+        <label>
+          {% if lang == 'te' %}జిల్లా{% else %}District:{% endif %}
+        </label>
         <input type="text" class="form-control" name="district" required />
       </div>
       <div class="mb-3">
-        <label>Pincode:</label>
+        <label>
+          {% if lang == 'te' %}పిన్‌కోడ్{% else %}Pincode:{% endif %}
+        </label>
         <input
           type="text"
           class="form-control"
@@ -266,15 +306,29 @@
           required
         />
       </div>
-      <button type="submit" class="btn btn-primary w-100">Register</button>
+      <button type="submit" class="btn btn-primary w-100">
+        {% if lang == 'te' %}నమోదు{% else %}Register{% endif %}
+      </button>
     </form>
 
     <footer class="mt-5">
       <p>
-        <strong>Prem Aabhar - 59th Guru Pooja Mahotsav</strong><br />
-        31st July 2025 | 10:30 AM – 2:00 PM<br />
-        Raj Vidya Kender, Alamkhan Palli, Kadapa - 516003<br />
-        Contact: 9440570704
+        <strong>
+          {% if lang == 'te' %}
+            ప్రేమ్ ఆభార్ - 59వ గురుపూజ మహోత్సవం
+          {% else %}
+            Prem Aabhar - 59th Guru Pooja Mahotsav
+          {% endif %}
+        </strong><br />
+        {% if lang == 'te' %}
+          31 జూలై 2025 | ఉదయం 10:30 – మధ్యాహ్నం 2:00<br />
+          రాజ్ విద్యా కేంద్రం, ఆలంకాన్ పల్లి, కడప - 516003<br />
+          సంప్రదించండి: 9440570704
+        {% else %}
+          31st July 2025 | 10:30 AM – 2:00 PM<br />
+          Raj Vidya Kender, Alamkhan Palli, Kadapa - 516003<br />
+          Contact: 9440570704
+        {% endif %}
       </p>
     </footer>
 

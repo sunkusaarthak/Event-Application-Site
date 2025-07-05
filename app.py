@@ -18,6 +18,7 @@ logger = logging.getLogger("EventApp")
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRT_KEY')
+pool_size = int(os.getenv('POOL_SIZE'))
 
 db_config = {
     'host': os.getenv('MYSQL_HOST'),
@@ -29,11 +30,16 @@ db_config = {
 }
 
 # Init DBManager with pooling
-db = DBManager(db_config, pool_size=5)
+db = DBManager(db_config, pool_size=pool_size)
+
+@app.route('/heartbeat')
+def heartbeat():
+    return {"message" : "✌️"}
 
 @app.route('/', methods=['GET', 'POST'])
 def register():
-    logger.debug(f"Handling {request.method} request at / from {request.remote_addr}")
+    lang = request.args.get('lang', 'en')
+    logger.debug(f"Handling {request.method} request at / from {request.remote_addr} with lang={lang}")
     if request.method == 'POST':
         name = request.form['name']
         phone = request.form['phone']
@@ -51,29 +57,26 @@ def register():
 
             cursor.execute("SELECT id FROM registrations WHERE phone_number = %s", (phone,))
             logger.debug(f"Executed duplicate check for phone: {phone}")
+            skip_insert = False
             if cursor.fetchone():
                 logger.warning(f"Duplicate registration attempt for phone: {phone} from {request.remote_addr}")
-                flash("Phone number already registered!", "danger")
-                cursor.close()
-                conn.close()
-                logger.debug("Closed DB cursor and connection after duplicate")
-                return redirect(url_for('register'))
+                skip_insert = True
 
-            insert_sql = """
-                INSERT INTO registrations (name, phone_number, street, village, district, pincode)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """
-            values = (name, phone, street, village, district, pincode)
-            cursor.execute(insert_sql, values)
-            logger.info(f"Inserted registration for phone: {phone}")
-            conn.commit()
-            logger.debug("DB commit successful")
+            if not skip_insert:
+                insert_sql = """
+                    INSERT INTO registrations (name, phone_number, street, village, district, pincode)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """
+                values = (name, phone, street, village, district, pincode)
+                cursor.execute(insert_sql, values)
+                logger.info(f"Inserted registration for phone: {phone}")
+                conn.commit()
+                logger.debug("DB commit successful")
 
             cursor.execute("""
                 SELECT id FROM registrations
-                WHERE name=%s AND phone_number=%s AND street=%s AND village=%s AND district=%s AND pincode=%s
-                ORDER BY id DESC LIMIT 1
-            """, values)
+                WHERE phone_number=%s
+            """, [phone])
             logger.debug("Fetched registration ID after insert")
             row = cursor.fetchone()
 
@@ -84,32 +87,39 @@ def register():
             if row:
                 logger.info(f"User ID fetched: {row[0]} for phone: {phone}")
                 session['recent_user_id'] = row[0]
-                return redirect(url_for('confirmation'))
+                if skip_insert:
+                    session['old'] = True
+                else:
+                    session['old'] = False
+                return redirect(url_for('confirmation', lang=lang))
             else:
                 logger.warning("Registration inserted but ID not fetched")
                 flash("Registered, but could not fetch your ID.", "warning")
-                return redirect(url_for('register'))
+                return redirect(url_for('register', lang=lang))
 
         except Exception as e:
             logger.exception(f"Database error during registration for phone: {phone}")
             flash(f"Database error: {str(e)}", "danger")
-            return redirect(url_for('register'))
+            return redirect(url_for('register', lang=lang))
 
     logger.debug("Rendering registration form")
-    return render_template('form.html')
+    return render_template('form.html', lang=lang)
 
 @app.route('/confirmation')
 def confirmation():
+    lang = request.args.get('lang', 'en')
     user_id = session.get('recent_user_id')
+    old_registration = session.get('old')
     logger.info(f"Confirmation page accessed for user_id: {user_id} from {request.remote_addr}")
     if session.get('recent_user_id') is None:
         logger.warning(f"Unauthorized confirmation access attempt for user_id: {user_id}")
         flash("Unauthorized access to confirmation page!", "danger")
-        return redirect(url_for('register'))
+        return redirect(url_for('register', lang=lang))
 
     # Allow access and clear session
     session.pop('recent_user_id', None)
-    return render_template('confirmation.html', user_id=user_id)
+    session.pop('old', None)
+    return render_template('confirmation.html', user_id=user_id, old_registration=old_registration, lang=lang)
 
 @app.route('/test-db')
 def test_db():
@@ -127,6 +137,78 @@ def test_db():
     except Exception as e:
         logger.exception("Error during /test-db")
         return f"Error: {e}", 500
+
+@app.route('/admin/fetch/details')
+def fetch_details():
+    lang = request.args.get('lang', 'en')
+    try:
+        conn = db.get_connection()
+        logger.debug("Obtained DB connection from pool for fetch_details")
+        cursor = conn.cursor(dictionary=True)  # dictionary=True returns column names
+
+        cursor.execute("SELECT id, name, phone_number, village FROM registrations ORDER BY id ASC")
+        logger.debug("Executed Fetch all Query")
+        rows = cursor.fetchall()
+
+        for a in rows:
+            a['id'] = "RVKKDP" + str(a['id'])
+
+        cursor.close()
+        conn.close()
+        logger.debug("Closed DB cursor and connection after fetch")
+
+        return render_template('admin.html', registrations=rows, lang=lang)
+
+    except Exception as e:
+        logger.exception("Database error during admin fetch")
+        flash(f"Database error: {str(e)}", "danger")
+        return redirect(url_for('register', lang=lang))
+
+@app.route('/admin/export/csv')
+def export_csv():
+    try:
+        conn = db.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM registrations ORDER BY id ASC")
+        rows = cursor.fetchall()
+
+        for a in rows:
+            a['id'] = "RVKKDP" + str(a['id'])
+        
+        cursor.close()
+        conn.close()
+
+        # Generate CSV response
+        from io import StringIO
+        import csv
+        from flask import Response
+
+        si = StringIO()
+        writer = csv.writer(si)
+        writer.writerow(["ID", "Name", "Phone", "Village", "district", "pincode"])  # CSV headers
+        # Write row data
+        for row in rows:
+            writer.writerow([
+                row['id'],
+                row['name'],
+                row['phone_number'],
+                row['village'],
+                row['district'],
+                row['pincode']
+            ])
+
+        output = si.getvalue()
+        si.close()
+
+        return Response(
+            output,
+            mimetype="text/csv",
+            headers={"Content-Disposition": "attachment; filename=registrations.csv"}
+        )
+
+    except Exception as e:
+        flash(f"CSV export failed: {str(e)}", "danger")
+        return redirect(url_for('fetch_details'))
 
 if __name__ == '__main__':
     logger.info("Starting Flask app")
