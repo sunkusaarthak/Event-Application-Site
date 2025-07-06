@@ -76,7 +76,8 @@ def register():
         village = request.form['village']
         district = request.form['district']
         pincode = request.form['pincode']
-        knowledge_date = request.form['knowledge_date'] 
+        knowledge_place = request.form.get('knowledge_place', '').strip() or None
+        knowledge_date = request.form.get('knowledge_date', '').strip() or None
         logger.info(f"Received registration form from {request.remote_addr} - Name: {name}, Phone: {phone}")
 
         conn = None
@@ -96,10 +97,10 @@ def register():
 
             if not skip_insert:
                 insert_sql = """
-                    INSERT INTO registrations (name, phone_number, street, village, district, pincode, knowledge_date)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    INSERT INTO registrations (name, phone_number, street, village, district, pincode, knowledge_place, knowledge_date)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """
-                values = (name, phone, street, village, district, pincode, knowledge_date)
+                values = (name, phone, street, village, district, pincode, knowledge_place, knowledge_date)
                 cursor.execute(insert_sql, values)
                 logger.info(f"Inserted registration for phone: {phone}")
                 conn.commit()
@@ -198,7 +199,7 @@ def fetch_details():
         logger.debug("Obtained DB connection from pool for fetch_details")
         cursor = conn.cursor(dictionary=True)  # dictionary=True returns column names
 
-        cursor.execute("SELECT id, name, phone_number, village, knowledge_date FROM registrations ORDER BY id ASC")
+        cursor.execute("SELECT id, name, phone_number, village, knowledge_date, knowledge_place FROM registrations ORDER BY id ASC")
         logger.debug("Executed Fetch all Query")
         rows = cursor.fetchall()
 
@@ -243,7 +244,7 @@ def export_csv():
 
         si = StringIO()
         writer = csv.writer(si)
-        writer.writerow(["ID", "Full Name", "Phone", "Village", "District", "Pincode", "Knowledge Date"])  # CSV headers
+        writer.writerow(["ID", "Full Name", "Phone", "Village", "District", "Pincode", "Knowledge Date", "Knowledge Place"])  # CSV headers
         # Write row data
         for row in rows:
             writer.writerow([
@@ -253,7 +254,8 @@ def export_csv():
                 row['village'],
                 row['district'],
                 row['pincode'],
-                row['knowledge_date']
+                row['knowledge_date'],
+                row['knowledge_place']
             ])
 
         output = si.getvalue()
