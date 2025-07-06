@@ -193,11 +193,19 @@
   <body class="container mt-3">
     <!-- Language Toggle -->
     <div class="d-flex justify-content-end mb-2">
-      <a href="{{ url_for('register', lang='en') }}" class="btn btn-sm {% if lang == 'en' %}btn-primary{% else %}btn-secondary{% endif %} me-1">English</a>
-      <a href="{{ url_for('register', lang='te') }}" class="btn btn-sm {% if lang == 'te' %}btn-primary{% else %}btn-secondary{% endif %}">తెలుగు</a>
+      <a
+        href="{{ url_for('register', lang='en') }}"
+        class="btn btn-sm {% if lang == 'en' %}btn-primary{% else %}btn-secondary{% endif %} me-1"
+        >English</a
+      >
+      <a
+        href="{{ url_for('register', lang='te') }}"
+        class="btn btn-sm {% if lang == 'te' %}btn-primary{% else %}btn-secondary{% endif %}"
+        >తెలుగు</a
+      >
     </div>
 
-    <!-- Video Banner -->
+    <!-- Video Banner
     <video
       id="bannerVideo"
       class="video-banner mb-3"
@@ -210,7 +218,13 @@
         type="video/mp4"
       />
       Your browser does not support the video tag.
-    </video>
+    </video> -->
+
+    <img
+      class="video-banner mb-3"
+      src="{{ url_for('static', filename='banner.png') }}"
+    />
+    <!-- <link class="video-banner mb-3" href="https://cdn.jsdelivr.net/gh/sunkusaarthak/rvk-assets@main/rvk-logo.png" type="image/png"/> -->
 
     <!-- Event Header -->
     <div class="event-header">
@@ -230,9 +244,9 @@
       </h2>
       <p class="event-date-time">
         {% if lang == 'te' %}
-          గురువారం, 31 జూలై 2025 • ఉదయం 10:30 – మధ్యాహ్నం 2:00
+          గురువారం, 31 జూలై 2025 • ఉదయం 10:00 – మధ్యాహ్నం 2:00
         {% else %}
-          Thursday, 31st July 2025 • 10:30 AM – 2:00 PM
+          Thursday, 31st July 2025 • 10:00 AM – 2:00 PM
         {% endif %}
       </p>
       <hr class="event-divider" />
@@ -260,7 +274,7 @@
     <form method="POST" class="needs-validation" novalidate>
       <div class="mb-3">
         <label>
-          {% if lang == 'te' %}పేరు{% else %}Name:{% endif %}
+          {% if lang == 'te' %}పూర్తి పేరు{% else %}Full Name:{% endif %}
         </label>
         <input type="text" class="form-control" name="name" required />
       </div>
@@ -306,6 +320,20 @@
           required
         />
       </div>
+      <div class="mb-3">
+        <label>
+          {% if lang == 'te' %}జ్ఞానం తేదీ{% else %}Knowledge Date:{% endif %}
+        </label>
+        <input
+          type="date"
+          class="form-control"
+          name="knowledge_date"
+          inputmode="numeric"
+          pattern="\d{4}-\d{2}-\d{2}"
+          max="{{ now.strftime('%Y-%m-%d') }}"
+          required
+        />
+      </div>
       <button type="submit" class="btn btn-primary w-100">
         {% if lang == 'te' %}నమోదు{% else %}Register{% endif %}
       </button>
@@ -321,11 +349,11 @@
           {% endif %}
         </strong><br />
         {% if lang == 'te' %}
-          31 జూలై 2025 | ఉదయం 10:30 – మధ్యాహ్నం 2:00<br />
+          31 జూలై 2025 | ఉదయం 10:00 – మధ్యాహ్నం 2:00<br />
           రాజ్ విద్యా కేంద్రం, ఆలంకాన్ పల్లి, కడప - 516003<br />
           సంప్రదించండి: 9440570704
         {% else %}
-          31st July 2025 | 10:30 AM – 2:00 PM<br />
+          31st July 2025 | 10:00 AM – 2:00 PM<br />
           Raj Vidya Kender, Alamkhan Palli, Kadapa - 516003<br />
           Contact: 9440570704
         {% endif %}
@@ -333,18 +361,6 @@
     </footer>
 
     <script>
-      const video = document.getElementById("bannerVideo");
-      video.playbackRate = 0.5;
-      video.addEventListener("click", () => {
-        video.currentTime = 0;
-        video.play();
-      });
-
-      // Optional: also handle touch for mobile (not always needed but extra safe)
-      video.addEventListener("touchstart", () => {
-        video.currentTime = 0;
-        video.play();
-      });
       (() => {
         "use strict";
         const forms = document.querySelectorAll(".needs-validation");
@@ -352,6 +368,15 @@
           form.addEventListener(
             "submit",
             (event) => {
+              // Custom check for knowledge_date field
+              const knowledgeDate = form.querySelector('[name="knowledge_date"]');
+              if (!knowledgeDate.value) {
+                knowledgeDate.classList.add("is-invalid");
+                event.preventDefault();
+                event.stopPropagation();
+              } else {
+                knowledgeDate.classList.remove("is-invalid");
+              }
               if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
