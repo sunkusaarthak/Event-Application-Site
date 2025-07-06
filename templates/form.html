@@ -354,7 +354,7 @@
           >
           {% else %} Knowledge Details
           <span class="text-muted" style="font-weight: 400"
-            >(Place or Date)</span
+            >(Knowledge Place or Date)</span
           >
           {% endif %}
         </label>
@@ -383,19 +383,18 @@
           </div>
         </div>
         <div
-          class="invalid-feedback mt-2"
+          class="form-text"
           id="knowledge-feedback"
-          style="display: none"
         >
           {% if lang == 'te' %} దయచేసి జ్ఞానం తీసుకున్న ప్రాంతం లేదా తేదీ కనీసం
           ఒకదాన్ని ఇవ్వండి. {% else %} Please provide at least Knowledge Place
           or Knowledge Date. {% endif %}
         </div>
-        <div class="form-text">
+        <!-- <div class="form-text">
           {% if lang == 'te' %} మీరు జ్ఞానం తీసుకున్న ప్రాంతం లేదా తేదీ
           రెండింటిలో కనీసం ఒకదాన్ని ఇవ్వాలి. {% else %} You must provide at
           least one: Knowledge Place or Date. {% endif %}
-        </div>
+        </div> -->
       </div>
       <button type="submit" class="btn btn-primary w-100">
         {% if lang == 'te' %}నమోదు{% else %}Register{% endif %}
@@ -417,65 +416,80 @@
       </p>
     </footer>
 
-    <script>
-      (() => {
-        "use strict";
-        const form = document.querySelector(".needs-validation");
+<script>
+  (() => {
+    "use strict";
+    const form = document.querySelector(".needs-validation");
 
-        const place = document.getElementById("knowledge_place");
-        const date = document.getElementById("knowledge_date");
-        const feedback = document.getElementById("knowledge-feedback");
+    const place = document.getElementById("knowledge_place");
+    const date = document.getElementById("knowledge_date");
+    const feedback = document.getElementById("knowledge-feedback");
 
-        form.addEventListener("submit", (event) => {
-          const hasPlace = place.value.trim() !== "";
-          const hasDate = date.value !== "";
-          const knowledgeValid = hasPlace || hasDate;
+    form.addEventListener("submit", (event) => {
+      const hasPlace = place.value.trim() !== "";
+      const hasDate = date.value !== "";
+      const knowledgeValid = hasPlace || hasDate;
 
-          // Handle required attributes dynamically
-          if (hasPlace && !hasDate) {
-            date.removeAttribute("required");
-            place.setAttribute("required", "true");
-          } else if (!hasPlace && hasDate) {
-            place.removeAttribute("required");
-            date.setAttribute("required", "true");
-          } else {
-            // Both filled
-            place.setAttribute("required", "true");
-            date.setAttribute("required", "true");
-          }
+      // Handle required attributes dynamically
+      if (hasPlace && !hasDate) {
+        date.removeAttribute("required");
+        place.setAttribute("required", "true");
+      } else if (!hasPlace && hasDate) {
+        place.removeAttribute("required");
+        date.setAttribute("required", "true");
+      } else {
+        // Both filled
+        place.setAttribute("required", "true");
+        date.setAttribute("required", "true");
+      }
 
-          // Custom validation styling and message
-          if (!knowledgeValid) {
-            place.classList.add("is-invalid");
-            date.classList.add("is-invalid");
-            feedback.style.display = "block";
-          } else {
-            place.classList.remove("is-invalid");
-            date.classList.remove("is-invalid");
-            feedback.style.display = "none";
-          }
+      // Custom validation styling and feedback color
+      if (!knowledgeValid) {
+        place.classList.add("is-invalid");
+        date.classList.add("is-invalid");
+        feedback.style.color = "red";
+      } else {
+        place.classList.remove("is-invalid");
+        date.classList.remove("is-invalid");
+        feedback.style.color = "gray";
+      }
 
-          // Prevent form if built-in or custom validation fails
-          if (!form.checkValidity() || !knowledgeValid) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
+      // Prevent form if native or custom validation fails
+      if (!form.checkValidity() || !knowledgeValid) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
 
-          form.classList.add("was-validated");
-        });
+      form.classList.add("was-validated");
+    });
 
-        // Remove error styles on input
-        function clearCustomInvalid() {
-          if (place.value.trim() || date.value) {
-            place.classList.remove("is-invalid");
-            date.classList.remove("is-invalid");
-            feedback.style.display = "none";
-          }
-        }
+    // Remove error styles and set feedback to gray on input
+    function clearCustomInvalid() {
+      const hasPlace = place.value.trim() !== "";
+      const hasDate = date.value !== "";
+      if (place.value.trim() || date.value) {
+        place.classList.remove("is-invalid");
+        date.classList.remove("is-invalid");
+        feedback.style.color = "gray";
+      }
+      // Handle required attributes dynamically
+      if (hasPlace && !hasDate) {
+        date.removeAttribute("required");
+        place.setAttribute("required", "true");
+      } else if (!hasPlace && hasDate) {
+        place.removeAttribute("required");
+        date.setAttribute("required", "true");
+      } else {
+        // Both filled
+        place.setAttribute("required", "true");
+        date.setAttribute("required", "true");
+      }
+    }
 
-        place.addEventListener("input", clearCustomInvalid);
-        date.addEventListener("input", clearCustomInvalid);
-      })();
-    </script>
+    place.addEventListener("input", clearCustomInvalid);
+    date.addEventListener("input", clearCustomInvalid);
+  })();
+</script>
+
   </body>
 </html>
