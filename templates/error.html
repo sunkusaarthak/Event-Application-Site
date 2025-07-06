@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Error</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/jpg"
+      href="{{ url_for('static', filename='rvk-logo.png') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background: radial-gradient(
+          circle,
+          rgba(245, 249, 255, 1) 50%,
+          rgba(234, 241, 251, 1) 100%
+        );
+        color: #1a1a1a;
+        padding-bottom: 80px;
+      }
+      .event-header {
+        margin-top: 1rem;
+        text-align: center;
+      }
+      .event-title {
+        font-size: 2rem;
+        font-weight: 700;
+        background: radial-gradient(
+          circle,
+          rgba(255, 147, 15, 1) 0%,
+          rgba(253, 197, 0, 1) 52%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 0.2rem;
+      }
+      .event-subtitle {
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: #003f88;
+        margin-bottom: 0.3rem;
+      }
+      .event-date-time {
+        font-size: 0.95rem;
+        color: #003f88;
+      }
+      .event-divider {
+        width: 80px;
+        height: 3px;
+        background: #fdc500;
+        border: none;
+        opacity: 1;
+        margin: 0.5rem auto 1rem auto;
+        border-radius: 4px;
+      }
+      .error-box {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        color: #856404;
+        box-shadow: 0 0 5px rgba(0,0,0,0.05);
+        margin: 2rem auto 1rem auto;
+        max-width: 500px;
+        text-align: center;
+      }
+      footer {
+        color: #00296b;
+        text-align: center;
+        font-size: 0.85rem;
+        padding: 10px 8px;
+        border-top: 2px solid #d0d7e0;
+        box-shadow: none;
+        border-radius: 0;
+      }
+      footer strong {
+        color: #003f88;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body class="container mt-3">
+    <!-- Event Header -->
+    <div class="event-header">
+      <h1 class="event-title">Prem Aabhar</h1>
+      <h2 class="event-subtitle">59th Guru Pooja Mahotsav</h2>
+      <p class="event-date-time">
+        Thursday, 31st July 2025 • 10:00 AM – 2:00 PM
+      </p>
+      <hr class="event-divider" />
+    </div>
+
+    <div class="error-box">
+      <h2>Something went wrong!</h2>
+      <p>
+        {% if error %}
+          {{ error }}
+        {% else %}
+          An unexpected error occurred. Please try again later.
+        {% endif %}
+      </p>
+      <a href="{{ url_for('register') }}" class="btn btn-primary mt-3">Back to Home</a>
+    </div>
+
+    <footer class="mt-5">
+      <p>
+        <strong>Prem Aabhar - 59th Guru Pooja Mahotsav</strong><br />
+        31st July 2025 | 10:00 AM – 2:00 PM<br />
+        Raj Vidya Kender, Alamkhan Palli, Kadapa - 516003<br />
+        Contact: 9440570704
+      </p>
+    </footer>
+  </body>
+</html>

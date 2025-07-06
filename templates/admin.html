@@ -218,13 +218,11 @@
     <!-- Event Header -->
     <div class="event-header">
       <h1 class="event-title">
-        <a href="/" style="text-decoration: none; color: inherit"
-          >Prem Aabhar</a
-        >
+        <a href="/" style="text-decoration: none; color: inherit">Prem Aabhar</a>
       </h1>
       <h2 class="event-subtitle">59th Guru Pooja Mahotsav</h2>
       <p class="event-date-time">
-        Thursday, 31st July 2025 • 10:30 AM – 2:00 PM
+        Thursday, 31st July 2025 • 10:00 AM – 2:00 PM
       </p>
       <hr class="event-divider" />
     </div>
@@ -235,10 +233,15 @@
       >
         <h2>👤 Registered Participants</h2>
         <a
+          id="export-csv-btn"
           href="{{ url_for('export_csv') }}"
           class="btn btn-sm btn-outline-primary"
         >
-          ⬇️ Export CSV
+          <span id="export-csv-text">⬇️ Export CSV</span>
+          <span id="export-csv-loading" style="display:none;">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading
+          </span>
         </a>
       </div>
 
@@ -247,9 +250,10 @@
           <thead>
             <tr>
               <th>ID</th>
-              <th>Name</th>
+              <th>Full Name</th>
               <th>Phone</th>
               <th>Village</th>
+              <th>Knowledge Date</th>
             </tr>
           </thead>
           <tbody>
@@ -259,6 +263,7 @@
               <td>{{ row.name }}</td>
               <td>{{ row.phone_number }}</td>
               <td>{{ row.village }}</td>
+              <td>{{ row.knowledge_date }}</td>
             </tr>
             {% else %}
             <tr>
@@ -273,10 +278,27 @@
     <footer class="mt-5">
       <p>
         <strong>Prem Aabhar - 59th Guru Pooja Mahotsav</strong><br />
-        31st July 2025 | 10:30 AM – 2:00 PM<br />
+        31st July 2025 | 10:00 AM – 2:00 PM<br />
         Raj Vidya Kender, Alamkhan Palli, Kadapa - 516003<br />
         Contact: 9440570704
       </p>
     </footer>
+    <script>
+      // Show loading spinner on export click, revert after download starts
+      const exportBtn = document.getElementById('export-csv-btn');
+      const exportText = document.getElementById('export-csv-text');
+      const exportLoading = document.getElementById('export-csv-loading');
+
+      exportBtn.addEventListener('click', function (e) {
+        exportText.style.display = 'none';
+        exportLoading.style.display = 'inline-block';
+
+        // After a short delay, revert back (download should have started)
+        setTimeout(() => {
+          exportText.style.display = 'inline';
+          exportLoading.style.display = 'none';
+        }, 2000);
+      });
+    </script>
   </body>
 </html>
