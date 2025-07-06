@@ -110,6 +110,12 @@
         color: #1a1a1a;
       }
 
+      input.knowledge-control {
+        background-color: #ffffff;
+        border: 1px solid #ccc;
+        color: #1a1a1a;
+      }
+
       .btn-primary {
         background-color: #fdc500;
         border: none;
@@ -190,15 +196,33 @@
     </style>
 
     <!-- Social/SEO Meta Tags for Preview -->
-    <meta property="og:title" content="RVK Kadapa Guru Pooja Registration Form" />
-    <meta property="og:description" content="Register for the 59th Guru Pooja Mahotsav at Raj Vidya Kender, Kadapa. Join us on 31st July 2025!" />
-    <meta property="og:image" content="{{ url_for('static', filename='banner.png', _external=True) }}" />
+    <meta
+      property="og:title"
+      content="RVK Kadapa Guru Pooja Registration Form"
+    />
+    <meta
+      property="og:description"
+      content="Register for the 59th Guru Pooja Mahotsav at Raj Vidya Kender, Kadapa. Join us on 31st July 2025!"
+    />
+    <meta
+      property="og:image"
+      content="{{ url_for('static', filename='banner.png', _external=True) }}"
+    />
     <meta property="og:url" content="{{ request.url_root }}" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="RVK Kadapa Guru Pooja Registration Form" />
-    <meta name="twitter:description" content="Register for the 59th Guru Pooja Mahotsav at Raj Vidya Kender, Kadapa. Join us on 31st July 2025!" />
-    <meta name="twitter:image" content="{{ url_for('static', filename='banner.png', _external=True) }}" />
+    <meta
+      name="twitter:title"
+      content="RVK Kadapa Guru Pooja Registration Form"
+    />
+    <meta
+      name="twitter:description"
+      content="Register for the 59th Guru Pooja Mahotsav at Raj Vidya Kender, Kadapa. Join us on 31st July 2025!"
+    />
+    <meta
+      name="twitter:image"
+      content="{{ url_for('static', filename='banner.png', _external=True) }}"
+    />
   </head>
 
   <body class="container mt-3">
@@ -240,35 +264,23 @@
     <!-- Event Header -->
     <div class="event-header">
       <h1 class="event-title">
-        {% if lang == 'te' %}
-          ప్రేమ్ ఆభార్
-        {% else %}
-          Prem Aabhar
-        {% endif %}
+        {% if lang == 'te' %} ప్రేమ్ ఆభార్ {% else %} Prem Aabhar {% endif %}
       </h1>
       <h2 class="event-subtitle">
-        {% if lang == 'te' %}
-          59వ గురుపూజ మహోత్సవం
-        {% else %}
-          59th Guru Pooja Mahotsav
-        {% endif %}
+        {% if lang == 'te' %} 59వ గురుపూజ మహోత్సవం {% else %} 59th Guru Pooja
+        Mahotsav {% endif %}
       </h2>
       <p class="event-date-time">
-        {% if lang == 'te' %}
-          గురువారం, 31 జూలై 2025 • ఉదయం 10:00 – మధ్యాహ్నం 2:00
-        {% else %}
-          Thursday, 31st July 2025 • 10:00 AM – 2:00 PM
-        {% endif %}
+        {% if lang == 'te' %} గురువారం, 31 జూలై 2025 • ఉదయం 10:00 – మధ్యాహ్నం
+        2:00 {% else %} Thursday, 31st July 2025 • 10:00 AM – 2:00 PM {% endif
+        %}
       </p>
       <hr class="event-divider" />
     </div>
 
     <h2 class="mb-3">
-      {% if lang == 'te' %}
-        గురుపూజ కోసం నమోదు చేయండి
-      {% else %}
-        Register for Guru Pooja
-      {% endif %}
+      {% if lang == 'te' %} గురుపూజ కోసం నమోదు చేయండి {% else %} Register for
+      Guru Pooja {% endif %}
     </h2>
 
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
@@ -282,7 +294,12 @@
     </div>
     {% endfor %} {% endif %} {% endwith %}
 
-    <form method="POST" class="needs-validation" novalidate>
+    <form
+      method="POST"
+      class="needs-validation"
+      novalidate
+      id="registration-form"
+    >
       <div class="mb-3">
         <label>
           {% if lang == 'te' %}పూర్తి పేరు{% else %}Full Name:{% endif %}
@@ -302,9 +319,7 @@
         />
       </div>
       <div class="mb-3">
-        <label>
-          {% if lang == 'te' %}వీధి{% else %}Street:{% endif %}
-        </label>
+        <label> {% if lang == 'te' %}వీధి{% else %}Street:{% endif %} </label>
         <input type="text" class="form-control" name="street" required />
       </div>
       <div class="mb-3">
@@ -332,18 +347,55 @@
         />
       </div>
       <div class="mb-3">
-        <label>
-          {% if lang == 'te' %}జ్ఞానం తేదీ{% else %}Knowledge Date:{% endif %}
+        <label class="form-label">
+          {% if lang == 'te' %} జ్ఞానం వివరాలు
+          <span class="text-muted" style="font-weight: 400"
+            >(జ్ఞానం తీసుకున్న ప్రాంతం లేదా తేదీ)</span
+          >
+          {% else %} Knowledge Details
+          <span class="text-muted" style="font-weight: 400"
+            >(Place or Date)</span
+          >
+          {% endif %}
         </label>
-        <input
-          type="date"
-          class="form-control"
-          name="knowledge_date"
-          inputmode="numeric"
-          pattern="\d{4}-\d{2}-\d{2}"
-          max="{{ now.strftime('%Y-%m-%d') }}"
-          required
-        />
+        <div class="row g-2 align-items-end">
+          <div class="col-12 col-md-6">
+            <input
+              type="text"
+              class="form-control"
+              name="knowledge_place"
+              id="knowledge_place"
+              placeholder="{% if lang == 'te' %}జ్ఞానం తీసుకున్న ప్రాంతం{% else %}Knowledge Place{% endif %}"
+              required
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <input
+              type="date"
+              class="form-control"
+              name="knowledge_date"
+              id="knowledge_date"
+              inputmode="numeric"
+              pattern="\d{4}-\d{2}-\d{2}"
+              max="{{ now.strftime('%Y-%m-%d') }}"
+              required
+            />
+          </div>
+        </div>
+        <div
+          class="invalid-feedback mt-2"
+          id="knowledge-feedback"
+          style="display: none"
+        >
+          {% if lang == 'te' %} దయచేసి జ్ఞానం తీసుకున్న ప్రాంతం లేదా తేదీ కనీసం
+          ఒకదాన్ని ఇవ్వండి. {% else %} Please provide at least Knowledge Place
+          or Knowledge Date. {% endif %}
+        </div>
+        <div class="form-text">
+          {% if lang == 'te' %} మీరు జ్ఞానం తీసుకున్న ప్రాంతం లేదా తేదీ
+          రెండింటిలో కనీసం ఒకదాన్ని ఇవ్వాలి. {% else %} You must provide at
+          least one: Knowledge Place or Date. {% endif %}
+        </div>
       </div>
       <button type="submit" class="btn btn-primary w-100">
         {% if lang == 'te' %}నమోదు{% else %}Register{% endif %}
@@ -353,50 +405,76 @@
     <footer class="mt-5">
       <p>
         <strong>
-          {% if lang == 'te' %}
-            ప్రేమ్ ఆభార్ - 59వ గురుపూజ మహోత్సవం
-          {% else %}
-            Prem Aabhar - 59th Guru Pooja Mahotsav
-          {% endif %}
-        </strong><br />
-        {% if lang == 'te' %}
-          31 జూలై 2025 | ఉదయం 10:00 – మధ్యాహ్నం 2:00<br />
-          రాజ్ విద్యా కేంద్రం, ఆలంకాన్ పల్లి, కడప - 516003<br />
-          సంప్రదించండి: 9440570704
-        {% else %}
-          31st July 2025 | 10:00 AM – 2:00 PM<br />
-          Raj Vidya Kender, Alamkhan Palli, Kadapa - 516003<br />
-          Contact: 9440570704
-        {% endif %}
+          {% if lang == 'te' %} ప్రేమ్ ఆభార్ - 59వ గురుపూజ మహోత్సవం {% else %}
+          Prem Aabhar - 59th Guru Pooja Mahotsav {% endif %} </strong
+        ><br />
+        {% if lang == 'te' %} 31 జూలై 2025 | ఉదయం 10:00 – మధ్యాహ్నం 2:00<br />
+        రాజ్ విద్యా కేంద్రం, ఆలంకాన్ పల్లి, కడప - 516003<br />
+        సంప్రదించండి: 9440570704 {% else %} 31st July 2025 | 10:00 AM – 2:00
+        PM<br />
+        Raj Vidya Kender, Alamkhan Palli, Kadapa - 516003<br />
+        Contact: 9440570704 {% endif %}
       </p>
     </footer>
 
     <script>
       (() => {
         "use strict";
-        const forms = document.querySelectorAll(".needs-validation");
-        Array.from(forms).forEach((form) => {
-          form.addEventListener(
-            "submit",
-            (event) => {
-              // Custom check for knowledge_date field
-              const knowledgeDate = form.querySelector('[name="knowledge_date"]');
-              if (!knowledgeDate.value) {
-                knowledgeDate.classList.add("is-invalid");
-                event.preventDefault();
-                event.stopPropagation();
-              } else {
-                knowledgeDate.classList.remove("is-invalid");
-              }
-              if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-              }
-              form.classList.add("was-validated");
-            },
-            false
-          );
+        const form = document.querySelector(".needs-validation");
+
+        const place = document.getElementById("knowledge_place");
+        const date = document.getElementById("knowledge_date");
+        const feedback = document.getElementById("knowledge-feedback");
+
+        form.addEventListener("submit", (event) => {
+          const hasPlace = place.value.trim() !== "";
+          const hasDate = date.value !== "";
+          const knowledgeValid = hasPlace || hasDate;
+
+          // Handle required attributes dynamically
+          if (hasPlace && !hasDate) {
+            date.removeAttribute("required");
+            place.setAttribute("required", "true");
+          } else if (!hasPlace && hasDate) {
+            place.removeAttribute("required");
+            date.setAttribute("required", "true");
+          } else {
+            // Both filled
+            place.setAttribute("required", "true");
+            date.setAttribute("required", "true");
+          }
+
+          // Custom validation styling and message
+          if (!knowledgeValid) {
+            place.classList.add("is-invalid");
+            date.classList.add("is-invalid");
+            feedback.style.display = "block";
+          } else {
+            place.classList.remove("is-invalid");
+            date.classList.remove("is-invalid");
+            feedback.style.display = "none";
+          }
+
+          // Prevent form if built-in or custom validation fails
+          if (!form.checkValidity() || !knowledgeValid) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
+          form.classList.add("was-validated");
         });
+
+        // Remove error styles on input
+        function clearCustomInvalid() {
+          if (place.value.trim() || date.value) {
+            place.classList.remove("is-invalid");
+            date.classList.remove("is-invalid");
+            feedback.style.display = "none";
+          }
+        }
+
+        place.addEventListener("input", clearCustomInvalid);
+        date.addEventListener("input", clearCustomInvalid);
       })();
     </script>
   </body>
