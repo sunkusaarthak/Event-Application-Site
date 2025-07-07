@@ -345,57 +345,70 @@
           pattern="[0-9]{6}"
           required
         />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">
-          {% if lang == 'te' %} జ్ఞానం వివరాలు
-          <span class="text-muted" style="font-weight: 400"
-            >(జ్ఞానం తీసుకున్న ప్రాంతం లేదా తేదీ)</span
-          >
-          {% else %} Knowledge Details
-          <span class="text-muted" style="font-weight: 400"
-            >(Knowledge Place or Date)</span
-          >
-          {% endif %}
-        </label>
+      </div> </br>
+      <div class="mb-3 border rounded p-3 position-relative">
+        <!-- Section Title -->
+        <div
+          class="position-absolute top-0 start-0 px-2 ms-3"
+          style="
+            transform: translateY(-50%);
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #00296b;
+            background: radial-gradient(circle, rgba(245, 249, 255, 1) 50%, rgba(234, 241, 251, 1) 100%);
+          "
+        >
+          {% if lang == 'te' %} జ్ఞానం వివరాలు (జ్ఞానం తీసుకున్న ప్రాంతం లేదా తేదీ){% else %} Knowledge Details (Knowledge Place or Date) {%
+          endif %}
+        </div>
+
+        <!-- Description below title
+        <div class="mb-2 text-muted" style="font-size: 0.9rem">
+          {% if lang == 'te' %} (జ్ఞానం తీసుకున్న ప్రాంతం లేదా తేదీ) {% else %}
+          (Knowledge Place or Date) {% endif %}
+        </div> -->
+
+        <!-- Input Fields -->
         <div class="row g-2 align-items-end">
           <div class="col-12 col-md-6">
+            <label for="knowledge_place" class="form-label">
+              {% if lang == 'te' %}జ్ఞానం తీసుకున్న ప్రాంతం{% else %}Knowledge
+              Place{% endif %}
+            </label>
             <input
               type="text"
               class="form-control"
               name="knowledge_place"
               id="knowledge_place"
-              placeholder="{% if lang == 'te' %}జ్ఞానం తీసుకున్న ప్రాంతం{% else %}Knowledge Place{% endif %}"
               required
             />
           </div>
+
           <div class="col-12 col-md-6">
+            <label for="knowledge_date" class="form-label">
+              {% if lang == 'te' %}జ్ఞానం తీసుకున్న తేదీ{% else %}Knowledge Date
+              (dd-mm-yyyy){% endif %}
+            </label>
             <input
               type="date"
               class="form-control"
               name="knowledge_date"
               id="knowledge_date"
               inputmode="numeric"
-              pattern="\d{4}-\d{2}-\d{2}"
               max="{{ now.strftime('%Y-%m-%d') }}"
               required
             />
           </div>
         </div>
-        <div
-          class="form-text"
-          id="knowledge-feedback"
-        >
+
+        <!-- Feedback -->
+        <div class="form-text mt-2" id="knowledge-feedback" style="color: gray">
           {% if lang == 'te' %} దయచేసి జ్ఞానం తీసుకున్న ప్రాంతం లేదా తేదీ కనీసం
           ఒకదాన్ని ఇవ్వండి. {% else %} Please provide at least Knowledge Place
           or Knowledge Date. {% endif %}
         </div>
-        <!-- <div class="form-text">
-          {% if lang == 'te' %} మీరు జ్ఞానం తీసుకున్న ప్రాంతం లేదా తేదీ
-          రెండింటిలో కనీసం ఒకదాన్ని ఇవ్వాలి. {% else %} You must provide at
-          least one: Knowledge Place or Date. {% endif %}
-        </div> -->
       </div>
+
       <button type="submit" class="btn btn-primary w-100">
         {% if lang == 'te' %}నమోదు{% else %}Register{% endif %}
       </button>
@@ -416,80 +429,79 @@
       </p>
     </footer>
 
-<script>
-  (() => {
-    "use strict";
-    const form = document.querySelector(".needs-validation");
+    <script>
+      (() => {
+        "use strict";
+        const form = document.querySelector(".needs-validation");
 
-    const place = document.getElementById("knowledge_place");
-    const date = document.getElementById("knowledge_date");
-    const feedback = document.getElementById("knowledge-feedback");
+        const place = document.getElementById("knowledge_place");
+        const date = document.getElementById("knowledge_date");
+        const feedback = document.getElementById("knowledge-feedback");
 
-    form.addEventListener("submit", (event) => {
-      const hasPlace = place.value.trim() !== "";
-      const hasDate = date.value !== "";
-      const knowledgeValid = hasPlace || hasDate;
+        form.addEventListener("submit", (event) => {
+          const hasPlace = place.value.trim() !== "";
+          const hasDate = date.value !== "";
+          const knowledgeValid = hasPlace || hasDate;
 
-      // Handle required attributes dynamically
-      if (hasPlace && !hasDate) {
-        date.removeAttribute("required");
-        place.setAttribute("required", "true");
-      } else if (!hasPlace && hasDate) {
-        place.removeAttribute("required");
-        date.setAttribute("required", "true");
-      } else {
-        // Both filled
-        place.setAttribute("required", "true");
-        date.setAttribute("required", "true");
-      }
+          // Handle required attributes dynamically
+          if (hasPlace && !hasDate) {
+            date.removeAttribute("required");
+            place.setAttribute("required", "true");
+          } else if (!hasPlace && hasDate) {
+            place.removeAttribute("required");
+            date.setAttribute("required", "true");
+          } else {
+            // Both filled
+            place.setAttribute("required", "true");
+            date.setAttribute("required", "true");
+          }
 
-      // Custom validation styling and feedback color
-      if (!knowledgeValid) {
-        place.classList.add("is-invalid");
-        date.classList.add("is-invalid");
-        feedback.style.color = "red";
-      } else {
-        place.classList.remove("is-invalid");
-        date.classList.remove("is-invalid");
-        feedback.style.color = "gray";
-      }
+          // Custom validation styling and feedback color
+          if (!knowledgeValid) {
+            place.classList.add("is-invalid");
+            date.classList.add("is-invalid");
+            feedback.style.color = "red";
+          } else {
+            place.classList.remove("is-invalid");
+            date.classList.remove("is-invalid");
+            feedback.style.color = "gray";
+          }
 
-      // Prevent form if native or custom validation fails
-      if (!form.checkValidity() || !knowledgeValid) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
+          // Prevent form if native or custom validation fails
+          if (!form.checkValidity() || !knowledgeValid) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
 
-      form.classList.add("was-validated");
-    });
+          form.classList.add("was-validated");
+        });
 
-    // Remove error styles and set feedback to gray on input
-    function clearCustomInvalid() {
-      const hasPlace = place.value.trim() !== "";
-      const hasDate = date.value !== "";
-      if (place.value.trim() || date.value) {
-        place.classList.remove("is-invalid");
-        date.classList.remove("is-invalid");
-        feedback.style.color = "gray";
-      }
-      // Handle required attributes dynamically
-      if (hasPlace && !hasDate) {
-        date.removeAttribute("required");
-        place.setAttribute("required", "true");
-      } else if (!hasPlace && hasDate) {
-        place.removeAttribute("required");
-        date.setAttribute("required", "true");
-      } else {
-        // Both filled
-        place.setAttribute("required", "true");
-        date.setAttribute("required", "true");
-      }
-    }
+        // Remove error styles and set feedback to gray on input
+        function clearCustomInvalid() {
+          const hasPlace = place.value.trim() !== "";
+          const hasDate = date.value !== "";
+          if (place.value.trim() || date.value) {
+            place.classList.remove("is-invalid");
+            date.classList.remove("is-invalid");
+            feedback.style.color = "gray";
+          }
+          // Handle required attributes dynamically
+          if (hasPlace && !hasDate) {
+            date.removeAttribute("required");
+            place.setAttribute("required", "true");
+          } else if (!hasPlace && hasDate) {
+            place.removeAttribute("required");
+            date.setAttribute("required", "true");
+          } else {
+            // Both filled
+            place.setAttribute("required", "true");
+            date.setAttribute("required", "true");
+          }
+        }
 
-    place.addEventListener("input", clearCustomInvalid);
-    date.addEventListener("input", clearCustomInvalid);
-  })();
-</script>
-
+        place.addEventListener("input", clearCustomInvalid);
+        date.addEventListener("input", clearCustomInvalid);
+      })();
+    </script>
   </body>
 </html>
