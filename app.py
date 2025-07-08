@@ -67,7 +67,7 @@ def heartbeat():
 
 @app.route('/', methods=['GET', 'POST'])
 def register():
-    lang = request.args.get('lang', 'en')
+    lang = request.args.get('lang', 'te')
     logger.debug(f"Handling {request.method} request at / from {request.remote_addr} with lang={lang}")
     if request.method == 'POST':
         name = request.form['name']
@@ -147,7 +147,7 @@ def register():
 
 @app.route('/confirmation')
 def confirmation():
-    lang = request.args.get('lang', 'en')
+    lang = request.args.get('lang', 'te')
     user_id = session.get('recent_user_id')
     old_registration = session.get('old')
     logger.info(f"Confirmation page accessed for user_id: {user_id} from {request.remote_addr}")
