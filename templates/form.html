@@ -345,29 +345,33 @@
           pattern="[0-9]{6}"
           required
         />
-      </div> </br>
-      <div class="mb-3 border rounded p-3 position-relative">
-        <!-- Section Title -->
+      </div>
+      <div class="mb-3 border rounded p-3">
+        <!-- Responsive Section Header -->
         <div
-          class="position-absolute top-0 start-0 px-2 ms-3"
+          class="px-0 py-1"
           style="
-            transform: translateY(-50%);
+            display: inline-block;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            max-width: 100%;
             color: #00296b;
-            background: radial-gradient(circle, rgba(245, 249, 255, 1) 50%, rgba(234, 241, 251, 1) 100%);
+            border-radius: 0.5rem;
+            white-space: normal;
+            line-height: 1.4;
           "
         >
-          {% if lang == 'te' %} జ్ఞానం వివరాలు (జ్ఞానం తీసుకున్న ప్రాంతం లేదా తేదీ){% else %} Knowledge Details (Knowledge Place or Date) {%
-          endif %}
+          {% if lang == 'te' %} జ్ఞానం వివరాలు
+          <span class="text-muted" style="font-weight: 400; font-size: 0.9rem">
+            (జ్ఞానం తీసుకున్న ప్రాంతం లేదా తేదీ)
+          </span>
+          {% else %} Knowledge Details
+          <span class="text-muted" style="font-weight: 400; font-size: 0.9rem">
+            (Knowledge Place or Date)
+          </span>
+          {% endif %}
         </div>
-
-        <!-- Description below title
-        <div class="mb-2 text-muted" style="font-size: 0.9rem">
-          {% if lang == 'te' %} (జ్ఞానం తీసుకున్న ప్రాంతం లేదా తేదీ) {% else %}
-          (Knowledge Place or Date) {% endif %}
-        </div> -->
-
+        <div class="mb-3" style="border-top: 1px solid #d0d7e0;"></div>
         <!-- Input Fields -->
         <div class="row g-2 align-items-end">
           <div class="col-12 col-md-6">
